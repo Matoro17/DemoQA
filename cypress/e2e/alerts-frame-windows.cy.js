@@ -1,8 +1,22 @@
 // alerts-frame-windows.cy.js
 describe('Alerts, Frame & Windows Tests', () => {
-    beforeEach(() => {
-      cy.visit('https://demoqa.com/alertsWindows');
+    before(() => {
+        // Handle uncaught exceptions from the application
+        Cypress.on('uncaught:exception', (err) => {
+            // Ignore cross-origin script errors
+            if (err.message.includes('Script error')) {
+                return false; // Prevent Cypress from failing the test
+            }
+        });
     });
+    beforeEach(() => {
+      cy.visit('https://demoqa.com/alertsWindows', {
+        // Bypass service worker if needed
+        onBeforeLoad(win) {
+            delete win.navigator.__proto__.serviceWorker;
+        }
+    });
+});
   
     describe('Browser Windows', () => {
       beforeEach(() => cy.get('#item-0').click());
