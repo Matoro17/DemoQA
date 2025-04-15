@@ -46,7 +46,9 @@ jobs:
         if: always()
         with:
           name: cypress-report
-          path: cypress/reports/html
+          path: |
+                cypress/reports/html
+                cypress/reports/screenshots
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4

@@ -1,17 +1,27 @@
-const { defineConfig } = require("cypress");
+const { defineConfig } = require('cypress');
 
 module.exports = defineConfig({
+  screenshotsFolder: 'cypress/reports/screenshots',
+  video: false,
   reporter: 'mochawesome',
   reporterOptions: {
     reportDir: 'cypress/reports/mocha',
     overwrite: false,
     html: false,
     json: true,
-    timestamp: "mmddyyyy_HHMMss"
+    embeddedScreenshots: true, // Enable screenshot embedding
+    screenshotOnRunFailure: true
   },
   e2e: {
     setupNodeEvents(on, config) {
-      // implement node event listeners here
-    },
-  },
+      on('after:spec', (spec, results) => {
+        if (results && results.stats.failures > 0) {
+          // Attach screenshots to failed tests
+          require('mochawesome/merge')(
+            require('glob').sync('cypress/reports/mocha/*.json')
+          );
+        }
+      });
+    }
+  }
 });
