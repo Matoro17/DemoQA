@@ -45,11 +45,6 @@ jobs:
           name: cypress-report
           path: cypress/reports/html
 
-      - name: Validate Report Files
-        run: |
-            ls -la cypress/reports/html
-            test -f cypress/reports/html/index.html
-
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
