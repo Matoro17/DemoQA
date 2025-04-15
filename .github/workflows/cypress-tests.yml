@@ -36,7 +36,10 @@ jobs:
         if: always()
         run: |
           npx mochawesome-merge cypress/reports/mocha/*.json > cypress/reports/mochareport.json
-          npx marge cypress/reports/mochareport.json -o cypress/reports/html --reportPageTitle "Cypress Report"
+          npx marge cypress/reports/mochareport.json \
+            -o cypress/reports/html \
+            --reportPageTitle "Cypress Report" \
+            --reportFilename index  # Force index.html name
 
       - name: Upload Test Report
         uses: actions/upload-artifact@v4
