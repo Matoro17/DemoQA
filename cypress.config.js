@@ -12,16 +12,10 @@ module.exports = defineConfig({
     embeddedScreenshots: true, // Enable screenshot embedding
     screenshotOnRunFailure: true
   },
+  env:{
+    apiUrl: 'https://demoqa.com',
+    token: 'YOUR_API_TOKEN' // Set via CI/CD or config
+  },
   e2e: {
-    setupNodeEvents(on, config) {
-      on('after:spec', (spec, results) => {
-        if (results && results.stats.failures > 0) {
-          // Attach screenshots to failed tests
-          require('mochawesome/merge')(
-            require('glob').sync('cypress/reports/mocha/*.json')
-          );
-        }
-      });
-    }
   }
 });
