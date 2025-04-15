@@ -16,15 +16,15 @@
 // Import commands.js using ES2015 syntax:
 import './commands'
 
-afterEach(function() {
-    if (this.currentTest.state === 'failed') {
-      const testTitle = this.currentTest.title.replace(/ /g, '-');
-      cy.screenshot(`FAILED-${testTitle}`, { overwrite: true });
+// afterEach(function() {
+//     if (this.currentTest.state === 'failed') {
+//       const testTitle = this.currentTest.title.replace(/ /g, '-');
+//       cy.screenshot(`FAILED-${testTitle}`, { overwrite: true });
       
-      // Attach screenshot to Mochawesome report
-      Cypress.runner.suite.suites
-        .find(s => s.title === this.currentTest.parent.title)
-        .tests.find(t => t.title === this.currentTest.title)
-        .context = `Screenshot: assets/screenshots/FAILED-${testTitle}.png`;
-    }
-  });
+//       // Attach screenshot to Mochawesome report
+//       Cypress.runner.suite.suites
+//         .find(s => s.title === this.currentTest.parent.title)
+//         .tests.find(t => t.title === this.currentTest.title)
+//         .context = `Screenshot: assets/screenshots/FAILED-${testTitle}.png`;
+//     }
+//   });
