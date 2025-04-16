@@ -43,7 +43,7 @@ describe('Practice Form Tests', () => {
     cy.get('#hobbies-checkbox-3').check({ force: true });
 
     // Upload Picture
-    cy.get('#uploadPicture').selectFile('cypress/fixtures/sample.jpg');
+    cy.get('#uploadPicture').selectFile('cypress/fixtures/sampleFile.jpeg');
 
     // Address
     cy.get('#currentAddress').type('123 Main Street, Apt 4B');
