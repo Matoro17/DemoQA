@@ -84,6 +84,8 @@ npm run test:report  # Creates HTML report in reports/html/
 2. **Framework Upgrades**:
    - Page Object Model adoption
    - Visual regression testing
+   - Screenshot on fail and for crucial steps
+   - Recording of the test run
 3. **Monitoring**:
    - Automated flaky test detection
    - Performance benchmarking
