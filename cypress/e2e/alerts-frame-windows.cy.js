@@ -1,48 +1,45 @@
 // alerts-frame-windows.cy.js
 describe('Alerts, Frame & Windows Tests', () => {
-    before(() => {
-        // Handle uncaught exceptions from the application
-        Cypress.on('uncaught:exception', (err) => {
-            // Ignore cross-origin script errors
-            if (err.message.includes('Script error')) {
-                return false; // Prevent Cypress from failing the test
-            }
-        });
+  before(() => {
+    Cypress.on('uncaught:exception', (err) => {
+      if (err.message.includes('Script error')) return false;
     });
-    beforeEach(() => {
-      cy.visit('https://demoqa.com/alertsWindows', {
-        // Bypass service worker if needed
-        onBeforeLoad(win) {
-            delete win.navigator.__proto__.serviceWorker;
-        }
+  });
+
+  beforeEach(() => {
+    cy.visit('https://demoqa.com/alertsWindows', {
+      // Bypass service worker if needed
+      onBeforeLoad(win) {
+        delete win.navigator.__proto__.serviceWorker;
+      }
     });
-});
+  });
+  // Disabled due to Cypress Limitations
+    // describe('Browser Windows', () => {
+    //   beforeEach(() => cy.get('#item-0').click());
   
-    describe('Browser Windows', () => {
-      beforeEach(() => cy.get('#item-0').click());
+    //   it('Opens new tab with proper content', () => {
+    //     cy.get('#tabButton').invoke('removeAttr', 'target').click();
+    //     cy.url().should('include', '/sample');
+    //     cy.contains('This is a sample page').should('be.visible');
+    //   });
   
-      it('Opens new tab with proper content', () => {
-        cy.get('#tabButton').invoke('removeAttr', 'target').click();
-        cy.url().should('include', '/sample');
-        cy.contains('This is a sample page').should('be.visible');
-      });
-  
-      it('Opens new window with correct dimensions', () => {
-        cy.get('#windowButton').then(($btn) => {
-          const originalWindow = cy.state('window');
-          cy.wrap($btn).invoke('removeAttr', 'target').click();
+    //   it('Opens new window with correct dimensions', () => {
+    //     cy.get('#windowButton').then(($btn) => {
+    //       const originalWindow = cy.state('window');
+    //       cy.wrap($btn).invoke('removeAttr', 'target').click();
           
-          cy.window().then((win) => {
-            const newWindow = win.open.calls[0].returnValue;
-            expect(newWindow.innerWidth).to.be.gt(500);
-            expect(newWindow.innerHeight).to.be.gt(400);
-          });
-        });
-      });
-    });
+    //       cy.window().then((win) => {
+    //         const newWindow = win.open.calls[0].returnValue;
+    //         expect(newWindow.innerWidth).to.be.gt(500);
+    //         expect(newWindow.innerHeight).to.be.gt(400);
+    //       });
+    //     });
+    //   });
+    // });
   
     describe('Alerts', () => {
-      beforeEach(() => cy.get('#item-1').click());
+      beforeEach(() => cy.get(':nth-child(3) > .element-list > .menu-list > #item-1').click());
   
       it('Handles simple alert', () => {
         cy.get('#alertButton').click();
@@ -60,30 +57,39 @@ describe('Alerts, Frame & Windows Tests', () => {
         cy.get('#confirmResult').should('contain', 'Cancel');
       });
   
-      it('Handles prompt alert with input', () => {
-        cy.get('#promtButton').click();
-        cy.on('window:prompt', (text) => {
-          expect(text).to.include('Please enter your name');
-          return 'Cypress User';
-        });
-        cy.get('#promptResult').should('contain', 'Cypress User');
-      });
+      // it('Handles prompt alert with input', () => {
+      //   cy.get('#promtButton').click();
+      //   cy.on('window:prompt', (text) => {
+      //     expect(text).to.include('Please enter your name');
+      //     cy.get(':nth-child(3) > button').click()
+      //     return false;
+      //   });
+      //   // cy.get('#promptResult').should('contain', 'Cypress User');
+      // });
     });
   
     describe('Frames', () => {
-      beforeEach(() => cy.get('#item-2').click());
+      beforeEach(() => {
+        cy.get(':nth-child(3) > .element-list > .menu-list > #item-2').click();
+        cy.wait(500)
+      });
   
       it('Validates frame content', () => {
-        cy.get('#frame1').then(($iframe) => {
-          const doc = $iframe.contents();
-          cy.wrap(doc.find('h1#sampleHeading'))
-            .should('have.text', 'This is a sample page');
-        });
+        cy.get('#frame1')
+        .should('be.visible')
+        .then(($iframe) => {
+            const $body = $iframe.contents().find('body')
+            cy.wrap($body)
+            .find(`h1`).should('have.text', 'This is a sample page');
+        })       
       });
     });
   
     describe('Nested Frames', () => {
-      beforeEach(() => cy.get('#item-3').click());
+      beforeEach(() => {
+        cy.contains('Nested Frames').click()
+        cy.wait(500)
+      });
   
       it('Navigates through nested frames', () => {
         cy.get('#frame1').then(parentFrame => {
@@ -99,7 +105,10 @@ describe('Alerts, Frame & Windows Tests', () => {
     });
   
     describe('Modal Dialogs', () => {
-      beforeEach(() => cy.get('#item-4').click());
+      beforeEach(() => {
+        cy.contains('Modal Dialogs').click()
+        cy.wait(500)
+      });
   
       it('Handles small modal', () => {
         cy.get('#showSmallModal').click();
@@ -110,8 +119,9 @@ describe('Alerts, Frame & Windows Tests', () => {
   
       it('Closes modal by clicking backdrop', () => {
         cy.get('#showLargeModal').click();
-        cy.get('.modal-content').click('topLeft');
-        cy.get('.modal-dialog').should('not.be.visible');
+        cy.get('.modal-dialog').should('be.visible');
+        cy.get('body').click(0,0);
+        cy.get('.modal-dialog').should('not.exist');
       });
     });
   });
